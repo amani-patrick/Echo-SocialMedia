@@ -14,6 +14,8 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.get('/', (req, res) => res.send('Post Service Running!'));
 app.use('/api/posts', postRoutes);
+app.use('/uploads', express.static('uploads'));
+
 
 if (process.env.NODE_ENV !== 'test') {
   const port = process.env.PORT || 8000;

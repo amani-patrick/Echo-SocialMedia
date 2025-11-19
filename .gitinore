@@ -6,6 +6,6 @@
 *.test.js
 README.md
 docker-compose.yml
-
+post-service/uploads/
 
 

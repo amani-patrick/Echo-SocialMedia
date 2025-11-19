@@ -5,3 +5,13 @@ notification-service/node_modules/
 user-service/node_modules/
 
 
+friendship-service/.env
+comment-service/.env
+post-service/.env
+notification-service/.env
+user-service/.env
+
+.env
+.gitignore
+
+post-service/uploads/
