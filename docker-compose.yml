@@ -1,0 +1,41 @@
+version: '3'
+services:
+  user-service:
+    build: ./user-service
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./user-service/.env
+  comment-service:
+    build: ./comment-service
+    ports: 
+      - "5000:5000"
+    env_file:
+      -./comment-service/.env
+  friendship-service:
+    build: ./friendship-service
+    ports: 
+      - "6000:6000"
+    env_file:
+      -./friendship-service/.env
+  notification-service:
+    build: ./notification-service
+    ports: 
+      - "7000:7000"
+    env_file:
+      -./notification-service/.env
+  post-service:
+    build: ./post-service
+    ports: 
+      - "8000:8000"
+    env_file:
+      -./post-service/.env
+
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"

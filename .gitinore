@@ -1,0 +1,11 @@
+.env
+./comment-service/node_modules/
+./friendship-service/node_modules/
+./notification-service/node_modules/
+./post-service/node_modules/
+*.test.js
+README.md
+docker-compose.yml
+
+
+
