@@ -15,3 +15,5 @@ user-service/.env
 .gitignore
 
 post-service/uploads/
+notification-service/models/notification.js
+notification-service/tests/*.test.js

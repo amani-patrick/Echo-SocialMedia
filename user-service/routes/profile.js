@@ -33,19 +33,19 @@ router.put('/me', authenticate, [
     const user = await User.findByIdAndUpdate(
       req.user.userId,
       updates,
-      { new: true, select: '-password -resetPasswordToken -resetPasswordExpires' }
+      { new: true, select: '-password -resetPasswordToken -resetPasswordExpires'  }
     );
     if (!user) return res.status(404).json({ error: 'User not found.' });
     res.json(user);
   } catch (err) {
     console.error('Update profile error:', err);
-    res.status(500).json({ error: 'Server error updating profile.' });
+    res.status(500).json({ error: 'Server error updating profile.'  });
   }
 });
 
 router.get('/search', async (req, res) => {
   const { q } = req.query;
-  if (!q) return res.status(400).json({ error: 'Query required' });
+  if (!q) return res.status(400).json({ error: 'Query required'  });
   try {
     // Case-insensitive partial match on username
     const users = await User.find({ username: { $regex: q, $options: 'i' } }).select('username bio avatar');
