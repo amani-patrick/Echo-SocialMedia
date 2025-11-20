@@ -17,8 +17,14 @@ beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_URI);
 
   userId = new mongoose.Types.ObjectId();
-  otherToken = jwt.sign({ userId: new mongoose.Types.ObjectId().toHexString(), username: 'otheruser' }, process.env.JWT_SECRET);
-  token = jwt.sign({ userId: userId.toHexString(), username: 'testuser' }, process.env.JWT_SECRET);
+  otherToken = jwt.sign(
+    { userId: new mongoose.Types.ObjectId().toHexString(), username: 'otheruser' },
+    process.env.JWT_SECRET
+  );
+  token = jwt.sign(
+    { userId: userId.toHexString(), username: 'testuser' },
+    process.env.JWT_SECRET
+  );
 
   await Post.deleteMany({});
   // Create dummy file for attachment upload
@@ -60,7 +66,7 @@ describe('Post Endpoints', () => {
       .post('/api/posts/upload')
       .set('Authorization', `Bearer ${token}`)
       .attach('attachment', attachmentPath);
-    expect([201, 200]).toContain(res.statusCode); // Accept 201 or 200
+    expect([201, 200]).toContain(res.statusCode); 
     expect(res.body.url).toMatch(/uploads/);
     expect(['image', 'file']).toContain(res.body.type);
   });
@@ -108,11 +114,11 @@ describe('Post Endpoints', () => {
     }
   });
 
-  it('should add and update a reaction', async () => {
+  it('should add and update a reaction, triggering notification', async () => {
     expect(postId).toBeDefined();
     let res = await request(app)
       .post(`/api/posts/${postId}/reaction`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${otherToken}`) // Not the author, should trigger notification
       .send({ type: 'like' });
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
@@ -120,7 +126,7 @@ describe('Post Endpoints', () => {
 
     res = await request(app)
       .post(`/api/posts/${postId}/reaction`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${otherToken}`)
       .send({ type: 'love' });
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
