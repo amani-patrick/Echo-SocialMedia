@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 // Main API routes
 app.use('/api/likes', likeRouter); 
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 2000;
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => console.log(`Like Service started on port ${port}`));

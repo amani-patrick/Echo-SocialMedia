@@ -18,7 +18,7 @@ app.get('/', (req, res) => res.send('User Service Running!'));
 app.use('/api/users', authRoutes);
 app.use('/api/users', profileRoutes);
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 9000;
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => console.log(`User Service started on port ${port}`));

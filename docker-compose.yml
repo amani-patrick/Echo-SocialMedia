@@ -3,7 +3,7 @@ services:
   user-service:
     build: ./user-service
     ports:
-      - "4000:4000"
+      - "9000:9000"
     env_file:
       - ./user-service/.env
   comment-service:
@@ -30,11 +30,17 @@ services:
       - "8000:8000"
     env_file:
       -./post-service/.env
+  like-service:
+    build: ./like-service
+    ports:
+      -"2000:2000"
+    env_file:
+      -./like-service/.env
 
   client:
     build: ./client
     ports:
-      - "3000:3000"
+      - "5173:5173"
   mongo:
     image: mongo
     ports:
