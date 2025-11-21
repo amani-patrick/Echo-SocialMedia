@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/friendship-service';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://mongo:27017/friendship-service';
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
