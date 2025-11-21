@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 // MongoDB connection
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/comment-service';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://mongo:27017/comment-service';
 mongoose.connect(MONGO_URI);
 mongoose.connection.on('connected', () =>
   console.log('MongoDB connected for comment-service')

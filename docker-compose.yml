@@ -1,47 +1,169 @@
-version: '3'
+version: '3.8'
+
 services:
+  # MongoDB Service
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-admin123}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-admin}
+    networks:
+      - echosols-network
+  
+  # User Service
   user-service:
-    build: ./user-service
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    restart: unless-stopped
     ports:
       - "9000:9000"
     env_file:
       - ./user-service/.env
+    depends_on:
+      - mongo
+    networks:
+      - echosols-network
+
+  # Comment Service
   comment-service:
-    build: ./comment-service
-    ports: 
+    build:
+      context: ./comment-service
+      dockerfile: Dockerfile
+    container_name: comment-service
+    restart: unless-stopped
+    ports:
       - "5000:5000"
     env_file:
-      -./comment-service/.env
+      - ./comment-service/.env
+    depends_on:
+      - mongo
+    networks:
+      - echosols-network
+
+  # Friendship Service
   friendship-service:
-    build: ./friendship-service
-    ports: 
+    build:
+      context: ./friendship-service
+      dockerfile: Dockerfile
+    container_name: friendship-service
+    restart: unless-stopped
+    ports:
       - "6000:6000"
     env_file:
-      -./friendship-service/.env
+      - ./friendship-service/.env
+    depends_on:
+      - mongo
+    networks:
+      - echosols-network
+
+  # Notification Service
   notification-service:
-    build: ./notification-service
-    ports: 
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    restart: unless-stopped
+    ports:
       - "7000:7000"
     env_file:
-      -./notification-service/.env
+      - ./notification-service/.env
+    depends_on:
+      - mongo
+    networks:
+      - echosols-network
+
+  # Post Service
   post-service:
-    build: ./post-service
-    ports: 
+    build:
+      context: ./post-service
+      dockerfile: Dockerfile
+    container_name: post-service
+    restart: unless-stopped
+    ports:
       - "8000:8000"
     env_file:
-      -./post-service/.env
-  like-service:
-    build: ./like-service
-    ports:
-      -"2000:2000"
-    env_file:
-      -./like-service/.env
+      - ./post-service/.env
+    depends_on:
+      - mongo
+    networks:
+      - echosols-network
 
+  # Like Service
+  like-service:
+    build:
+      context: ./like-service
+      dockerfile: Dockerfile
+    container_name: like-service
+    restart: unless-stopped
+    ports:
+      - "2000:2000"
+    env_file:
+      - ./like-service/.env
+    depends_on:
+      - mongo
+    networks:
+      - echosols-network
+
+  # Client
   client:
-    build: ./client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: client
+    restart: unless-stopped
     ports:
       - "5173:5173"
-  mongo:
-    image: mongo
+    environment:
+      - VITE_API_URL=http://api-gateway:8080
+    depends_on:
+      - user-service
+      - post-service
+      - api-gateway
+    networks:
+      - echosols-network
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - USER_SERVICE_URL=http://user-service:9000
+      - POST_SERVICE_URL=http://post-service:8000
+      - FRIENDSHIP_SERVICE_URL=http://friendship-service:6000
+      - COMMENT_SERVICE_URL=http://comment-service:5000
+      - LIKE_SERVICE_URL=http://like-service:2000
+      - NOTIFICATION_SERVICE_URL=http://notification-service:7000
+      - CORS_ORIGINS=http://client:5173,http://client:3000
+    depends_on:
+      - user-service
+      - post-service
+      - friendship-service
+      - comment-service
+      - like-service
+      - notification-service
+    networks:
+      - echosols-network
+# Networks
+networks:
+  echosols-network:
+    driver: bridge
+
+# Volumes
+volumes:
+  mongodb_data:
