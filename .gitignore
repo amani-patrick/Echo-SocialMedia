@@ -3,17 +3,26 @@ comment-service/node_modules/
 post-service/node_modules/
 notification-service/node_modules/
 user-service/node_modules/
+like-service/node_modules/
+client/node_modules/
 
-
+client/.env
+api-gateway/.env.example
+client/.env.example
 friendship-service/.env
 comment-service/.env
 post-service/.env
 notification-service/.env
 user-service/.env
+like-service/.env
+api-gateway/.env
 
 .env
 .gitignore
 
 post-service/uploads/
-notification-service/models/notification.js
 notification-service/tests/*.test.js
+comment-service/tests/*.test.js
+api-gateway/node_modules/
+friendship-service/tests/*.test.js
+api-gateway/env.example

@@ -50,7 +50,8 @@ router.post('/', authenticate, [
 router.get('/post/:postId', async (req, res) => {
   try {
     const comments = await Comment.find({ post: req.params.postId })
-      .sort({ createdAt: 1 });
+      .sort({ createdAt: 1 })
+      .populate('author', 'username avatar');
     res.json(comments);
   } catch (err) {
     console.error(err);

@@ -1,27 +1,28 @@
 {
   "name": "api-gateway",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "Reverse proxy and request gateway for EchoSols microservices.",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "jest",
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "echo \"no lint step configured\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "directories": {
-    "tests":"tests"
-  },
+  "keywords": [
+    "gateway",
+    "reverse-proxy",
+    "microservices"
+  ],
+  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "http-proxy-middleware": "^3.0.5"
+    "http-proxy-middleware": "^3.0.5",
+    "morgan": "^1.10.1"
   },
   "devDependencies": {
-    "jest": "^30.2.0",
-    "supertest": "^7.1.4"
+    "nodemon": "^3.1.11"
   }
 }
